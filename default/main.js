@@ -2,7 +2,7 @@ let helpers = require('helpers');
 let roleHarvester = require('role.harvester');
 let roleUpgrader = require('role.upgrader');
 let roleBuilder = require('role.builder');
-let workers = 10;
+let workers = 20;
 
 module.exports.loop = function () {
     
