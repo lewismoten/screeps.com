@@ -37,8 +37,10 @@ module.exports.loop = function () {
     // TODO: re-assign each worker based on capabilities, and better candidate than others (location, carry, etc.)
     
     helpers.creeps.map((creep, i) => {
-
-    if(helpers.creeps.length < workers) {
+        
+    // only harvest while energy is not at cap
+    let room = helpers.rooms[0];
+    if(room.energyCapacityAvailable - room.energyAvailable > 0) {
         roleHarvester.run(creep, i);
     } else {
         roleUpgrader.run(creep, i);
