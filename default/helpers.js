@@ -3,8 +3,18 @@ let lib = module.exports = {
     get creeps() { return getKeysAsArray(Game.creeps); },
     get rooms() { return getKeysAsArray(Game.rooms); },
     createCreep: createCreep,
-    get randomName() { return randomName(); }
+    get randomName() { return randomName(); },
+    gc: gc
 };
+
+function gc() {
+    for(var name in Memory.creeps) {
+        if(!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
+        }
+    }
+}
 
 function getKeysAsArray(obj) {
 
@@ -52,7 +62,7 @@ function createCreep(bodyParts) {
 
     } else if(s === ERR_BUSY) {
         
-        console.log("Too busy to create creep");
+       // console.log("Too busy to create creep");
 
     } else {
         
