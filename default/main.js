@@ -43,10 +43,15 @@ module.exports.loop = function () {
     // only harvest while energy is not at cap
     let room = helpers.rooms[0];
     if(room.energyCapacityAvailable - room.energyAvailable > 0) {
+            //creep.say('harvester');
         roleHarvester.run(creep, i);
     } else if (i > 4 && creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+        
+            //creep.say('builder');
         roleBuilder.run(creep, i);
     } else {
+            //creep.say('upgrader');
+        
         roleUpgrader.run(creep, i);
     }
         // creep.memory.role = "harvester"; 

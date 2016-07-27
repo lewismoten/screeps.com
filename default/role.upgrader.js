@@ -2,7 +2,9 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep, i) {
-        
+                creep.memory.role = "upgrader";
+
+        console.log('zzz');
         if(creep.memory.unloading && creep.carry.energy === 0) {
             creep.memory.unloading = false;
             creep.say("harvesting")
