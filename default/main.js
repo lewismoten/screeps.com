@@ -1,11 +1,12 @@
 let helpers = require('helpers');
 let roleHarvester = require('role.harvester');
 let roleUpgrader = require('role.upgrader');
+let workers = 10;
 
 module.exports.loop = function () {
     
 
-    if(helpers.creeps.length < 4) {
+    if(helpers.creeps.length < workers) {
         
         helpers.createCreep([WORK, CARRY, MOVE]);
 
@@ -22,6 +23,8 @@ module.exports.loop = function () {
     upgrade
     build
     mine
+    
+    consider suicide to create different worker types quickly - ie, create fighters when attacked and you have lots of miners
 
     out of energy - mine energy
     upgrade structure
@@ -35,7 +38,7 @@ module.exports.loop = function () {
     
     helpers.creeps.map((creep, i) => {
 
-    if(helpers.creeps.length < 4) {
+    if(helpers.creeps.length < workers) {
         roleHarvester.run(creep, i);
     } else {
         roleUpgrader.run(creep, i);

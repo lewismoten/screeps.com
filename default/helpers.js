@@ -50,6 +50,10 @@ function createCreep(bodyParts) {
         
         //console.log("Create creep failed");
 
+    } else if(s === ERR_BUSY) {
+        
+        console.log("Too busy to create creep");
+
     } else {
         
         console.log(`Creating ${name}`, s);
