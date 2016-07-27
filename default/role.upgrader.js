@@ -4,13 +4,12 @@ var roleUpgrader = {
     run: function(creep, i) {
                 creep.memory.role = "upgrader";
 
-        console.log('zzz');
         if(creep.memory.unloading && creep.carry.energy === 0) {
             creep.memory.unloading = false;
-            creep.say("harvesting")
+            creep.say("harvest")
         } else if(!creep.memory.unloading && creep.carry.energy === creep.carryCapacity) {
             creep.memory.unloading = true;
-            creep.say("upgrading");
+            creep.say("upgrade");
         }
         
         
