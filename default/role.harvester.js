@@ -3,16 +3,17 @@ let helpers = require('helpers');
 var roleHarvester = {
 
     /** @param {Creep} creep **/
-    run: function(creep) {
+    run: function(creep, i) {
         if(creep.carry.energy < creep.carryCapacity) {
             var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
+            var source = sources[i % sources.length];
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source);
             }
         }
         else {
-            if(creep.transfer(helpers.spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(helpers.spawn);
+            if(creep.transfer(helpers.spawns[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(helpers.spawns[0]);
             }
         }
     }
