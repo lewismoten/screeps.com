@@ -18,7 +18,7 @@ module.exports.loop = function () {
     // TODO: Let worker say when they are complete full task (mine, then deposit) - before being reassigned
     
     /*
-    
+    construct extension
     heal
     attack
     spawn
