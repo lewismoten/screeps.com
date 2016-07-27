@@ -4,7 +4,6 @@ let roleUpgrader = require('role.upgrader');
 let roleBuilder = require('role.builder');
 let workers = 10;
 
-// test
 module.exports.loop = function () {
     
     helpers.gc();
@@ -45,7 +44,7 @@ module.exports.loop = function () {
     let room = helpers.rooms[0];
     if(room.energyCapacityAvailable - room.energyAvailable > 0) {
         roleHarvester.run(creep, i);
-    } else if (creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+    } else if (i > 4 && creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
         roleBuilder.run(creep, i);
     } else {
         roleUpgrader.run(creep, i);
