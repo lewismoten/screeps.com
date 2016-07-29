@@ -146,7 +146,7 @@ function createCreep(bodyParts) {
 
     let cost = bodyParts.reduce((sum, p) => sum + BODYPART_COST[p] , 0);
     if (cost > spawnner.room.energyAvailable) {
-        console.log(`Can not create. Only have ${spawnner.room.energyAvailable} of ${cost}`);
+        // console.log(`Can not create. Only have ${spawnner.room.energyAvailable} of ${cost}`);
         return;
     }
 
