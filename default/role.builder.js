@@ -24,7 +24,7 @@ var roleBuilder = {
             }
         }
         else {
-            
+
             helpers.harvest(creep);
         }
     }

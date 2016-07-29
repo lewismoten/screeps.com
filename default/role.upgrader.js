@@ -12,12 +12,12 @@ var roleUpgrader = {
             creep.memory.unloading = true;
             creep.say("upgrade");
         }
-        
-        
+
+
         if(!creep.memory.unloading) {
-            
+
             helpers.harvest(creep);
-            
+
         }
         else {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {

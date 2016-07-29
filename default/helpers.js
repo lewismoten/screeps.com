@@ -9,9 +9,9 @@ let lib = module.exports = {
 };
 
 function harvest(creep) {
-    
+
     let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 4);
-    
+
     if (droppedEnergy.length > 0) {
 
         let x = creep.pickup(droppedEnergy[0]);
@@ -23,10 +23,10 @@ function harvest(creep) {
         return;
 
     }
-    
+
     let source = creep.pos.findClosestByRange(FIND_SOURCES);
     if(typeof source !== 'undefined') {
-        
+
         let status = creep.harvest(source);
         if (status === ERR_NOT_IN_RANGE) {
             creep.moveTo(source);
@@ -50,17 +50,17 @@ function getKeysAsArray(obj) {
 }
 
 function randomName() {
-    
+
     let constants = "bcdfghjklmnpqrstvwxz";
     let vowels = "aeiou";
     let name = "";
-    
+
     for(let i = 0; i < 3; i++) {
-    
+
         name += getRandom(constants);
         name += getRandom(vowels);
-    
-        
+
+
     }
 
     name += getRandom(constants);
@@ -132,13 +132,13 @@ function randomName() {
 }
 
 function getRandom(items) {
-    
+
     return items[Math.floor(Math.random() * items.length)];
 
 }
 
 function createCreep(bodyParts) {
-    
+
     // evaluate energy needed for body parts
 
     let name = randomName();
@@ -149,22 +149,22 @@ function createCreep(bodyParts) {
         console.log(`Can not create. Only have ${spawnner.room.energyAvailable} of ${cost}`);
         return;
     }
-    
+
     let s = spawnner.createCreep(bodyParts, name);
 
     if (s === ERR_NOT_ENOUGH_ENERGY) {
-        
+
         //console.log("Create creep failed");
 
     } else if(s === ERR_BUSY) {
-        
+
        // console.log("Too busy to create creep");
 
     } else {
-        
+
         console.log(`Creating ${name}`, s);
 
     }
 
-    
+
 }
