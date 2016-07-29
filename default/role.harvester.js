@@ -20,10 +20,16 @@ var roleHarvester = {
         
         if(creep.memory.unloading) {
             
-            let x = creep.transfer(helpers.spawns[0], RESOURCE_ENERGY);
+            //find a place to unload that can be unloaded into
+            //creep.room.find(FIND_CONSTRUCTION_SITES)
+            
+            let structure = creep.room.find(FIND_MY_STRUCTURES).filter(s => s.energy < s.energyCapacity)[0];
+            
+            let x = creep.transfer(structure, RESOURCE_ENERGY);
+//            let x = creep.transfer(helpers.spawns[0], RESOURCE_ENERGY);
             
              if(x == ERR_NOT_IN_RANGE) {
-                creep.moveTo(helpers.spawns[0]);
+                creep.moveTo(structure);
             }
         }
         else {
