@@ -1,3 +1,4 @@
+let helpers = require('helpers');
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
@@ -14,11 +15,9 @@ var roleUpgrader = {
         
         
         if(!creep.memory.unloading) {
-            var sources = creep.room.find(FIND_SOURCES);
-            var source = sources[0];//i % sources.length];
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
-            }
+            
+            helpers.harvest(creep);
+            
         }
         else {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {

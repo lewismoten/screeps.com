@@ -34,11 +34,7 @@ var roleHarvester = {
         }
         else {
             
-            var sources = creep.room.find(FIND_SOURCES);
-            var source = sources[0];//i % sources.length];
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
-            }
+            helpers.harvest(creep);
            
         }
     }

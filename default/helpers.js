@@ -4,9 +4,36 @@ let lib = module.exports = {
     get rooms() { return getKeysAsArray(Game.rooms); },
     createCreep: createCreep,
     get randomName() { return randomName(); },
-    gc: gc
+    gc: gc,
+    harvest: harvest
 };
 
+function harvest(creep) {
+    
+    let droppedEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 4);
+    
+    if (droppedEnergy.length > 0) {
+
+        let x = creep.pickup(droppedEnergy[0]);
+        if(x !== OK) {
+            creep.moveTo(droppedEnergy[0]);
+        } else {
+          creep.say('Ninja!');
+        }
+        return;
+
+    }
+    
+    let source = creep.pos.findClosestByRange(FIND_SOURCES);
+    if(typeof source !== 'undefined') {
+        
+        let status = creep.harvest(source);
+        if (status === ERR_NOT_IN_RANGE) {
+            creep.moveTo(source);
+        }
+    }
+
+}
 function gc() {
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
@@ -37,7 +64,8 @@ function randomName() {
     }
 
     name += getRandom(constants);
-
+    name += ' ' + getRandom(['😃','😁','😂','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','😚','😇','😐','😶','😏','😣','😥','😪','😫','😌','😜','😝','😒','😓','😔','😲','😷','😖','😞','😤','😢','😭','😨','😩','😰','😱','😳','😵','😡','😠','😈','👿']);
+    
     return name;
 
 }
@@ -54,6 +82,13 @@ function createCreep(bodyParts) {
 
     let name = randomName();
     let spawnner = lib.spawns[0];
+
+    let cost = bodyParts.reduce((sum, p) => sum + BODYPART_COST[p] , 0);
+    if (cost > spawnner.room.energyAvailable) {
+        console.log(`Can not create. Only have ${spawnner.room.energyAvailable} of ${cost}`);
+        return;
+    }
+    
     let s = spawnner.createCreep(bodyParts, name);
 
     if (s === ERR_NOT_ENOUGH_ENERGY) {
