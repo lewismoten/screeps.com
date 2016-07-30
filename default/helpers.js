@@ -23,15 +23,22 @@ function harvest(creep) {
         return;
 
     }
+    if(typeof creep.memory.source === 'undefined' || creep.memory.source === null) {
+        
+        let sources = creep.room.find(FIND_SOURCES);
+        let i = Math.floor(Math.random() * sources.length);
+        creep.memory.source = sources[i].id;
 
-    let source = creep.pos.findClosestByRange(FIND_SOURCES);
-    if(typeof source !== 'undefined') {
+    }
+    let source = Game.getObjectById(creep.memory.source);
+    //let source = creep.pos.findClosestByRange(FIND_SOURCES);
+    //if(typeof source !== 'undefined') {
 
         let status = creep.harvest(source);
         if (status === ERR_NOT_IN_RANGE) {
             creep.moveTo(source);
         }
-    }
+    //}
 
 }
 function gc() {
