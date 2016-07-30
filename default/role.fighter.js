@@ -9,7 +9,7 @@ var roleFighter = {
         var baddie = creep.room.find(FIND_HOSTILE_CREEPS)[0];
 
         if (baddie) {
-            creep.say('Kill!');
+            creep.say(baddie.owner.username + '!');
             let r = creep.attack(baddie);
             if(r !== OK) {
                 creep.moveTo(baddie);
