@@ -3,7 +3,7 @@ let roleHarvester = require('role.harvester');
 let roleUpgrader = require('role.upgrader');
 let roleBuilder = require('role.builder');
 let roleFighter = require('role.fighter');
-let workers = 15;
+let workers = 20;
 
 module.exports.loop = function () {
 
@@ -15,11 +15,10 @@ module.exports.loop = function () {
         
         var guards = helpers.creeps.filter(c => c.body.some(b => b.type === ATTACK)).length;
         var all = helpers.creeps.length;
+        var guardsNeeded = Math.floor(all / 6);
 
-        if(all > 5 && guards < 1) {
-            helpers.createCreep([MOVE, ATTACK, ATTACK, ATTACK]);
-        } else if(all > 10 && guards < 2) {
-            helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK]);
+        if(guards < guardsNeeded) {
+            helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
         } else {
             helpers.createCreep([WORK, CARRY, CARRY, MOVE]);
         }
