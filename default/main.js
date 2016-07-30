@@ -32,29 +32,14 @@ module.exports.loop = function () {
 
     // eval if a type of creep is near end of life and create a new one.
 
-    if(helpers.creeps.length < workers) {
-        
-        var guards = helpers.creeps.filter(c => c.body.some(b => b.type === ATTACK)).length;
-        var all = helpers.creeps.length;
-        var guardsNeeded = Math.floor(all / 6);
+    var guards = helpers.creeps.filter(c => c.body.some(b => b.type === ATTACK)).length;
+    var all = helpers.creeps.length;
+    var guardsNeeded = Math.floor(all / 6);
 
-        if(guards < guardsNeeded) {
-            helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
-        } else {
-            helpers.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]);
-        }
-
-    } else {
-
-        if(helpers.creeps.length > 5) {
-            // do we have any fighters?
-            if(!helpers.creeps.some(c => c.body.some(b => b.type === ATTACK))) {
-                // lets create a fighter
-                console.log('make me a fighter...');
-                helpers.createCreep([MOVE, ATTACK, ATTACK, ATTACK]);
-            }
-        }
-
+    if(guards < guardsNeeded) {
+        helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
+    } else if(helpers.creeps.length < workers) {
+        helpers.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]);
     }
 
     // TODO: Re-evaluate priorities (strategy)
