@@ -8,6 +8,27 @@ let workers = 20;
 module.exports.loop = function () {
 
     helpers.gc();
+    
+    for(var roomKey in Game.rooms) {
+
+        let room = Game.rooms[roomKey];
+        
+        var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+        
+        towers.forEach(t => {
+
+            let hostile = t.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+            if(hostile !== null) {
+
+                t.attack(hostile);
+
+            }
+
+        });
+
+    };
+    
 
     // eval if a type of creep is near end of life and create a new one.
 
