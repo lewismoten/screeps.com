@@ -41,7 +41,7 @@ module.exports.loop = function () {
         if(guards < guardsNeeded) {
             helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
         } else {
-            helpers.createCreep([WORK, CARRY, CARRY, MOVE]);
+            helpers.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]);
         }
 
     } else {
