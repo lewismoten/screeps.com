@@ -12,9 +12,14 @@ module.exports.loop = function () {
     // eval if a type of creep is near end of life and create a new one.
 
     if(helpers.creeps.length < workers) {
+        
+        var guards = helpers.creeps.filter(c => c.body.some(b => b.type === ATTACK)).length;
+        var all = helpers.creeps.length;
 
-        if(helpers.creeps.length > 5 && !helpers.creeps.some(c => c.body.some(b => b.type === ATTACK))) {
+        if(all > 5 && guards < 1) {
             helpers.createCreep([MOVE, ATTACK, ATTACK, ATTACK]);
+        } else if(all > 10 && guards < 2) {
+            helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK]);
         } else {
             helpers.createCreep([WORK, CARRY, CARRY, MOVE]);
         }
