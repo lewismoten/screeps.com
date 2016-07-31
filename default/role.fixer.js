@@ -29,11 +29,12 @@ var roleBuilder = {
                 if(walls.length !== 0) {
 
                     let minHits = walls.reduce((min, wall) => min < wall.hits ? min : wall.hits);
-                    walls = walls.filter(wall => wall.hits === minHits);
                     
-                    console.log(walls.length, 'broken walls with', minHits, 'hits');
-                    walls.sort();
-                    broken = walls[0];
+                    // Let's not upgrade our walls too much...
+                    if (minHits < creep.room.controller.level * 1000) {
+                        broken = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: {structureType: STRUCTURE_WALL, hits: minHits}});
+                    }
+                    
                 }
                 
             }
