@@ -3,7 +3,6 @@ let roleHarvester = require('role.harvester');
 let roleUpgrader = require('role.upgrader');
 let roleBuilder = require('role.builder');
 let roleFighter = require('role.fighter');
-let workers = 20;
 
 module.exports.loop = function () {
 
@@ -13,8 +12,10 @@ module.exports.loop = function () {
 
         let room = Game.rooms[roomKey];
         
-        var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-        
+        // Towers
+
+        let towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+
         towers.forEach(t => {
 
             let hostile = t.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -27,71 +28,69 @@ module.exports.loop = function () {
 
         });
 
+        // New Creeps
+        
+        let attackers = room.find(FIND_MY_CREEPS, {filter: c => c.body.some(b => b.type === ATTACK)});
+        let workers = room.find(FIND_MY_CREEPS, {filter: c => c.body.some(b => b.type === WORK)});
+        
+        let controller = room.controller;
+        
+        if (attackers.length < controller.level) {
+
+            helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
+
+        } else if (workers.length < controller.level * 5) {
+
+            helpers.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]);
+
+        }
+        
+        // Peace keepers
+        
+        attackers.sort().map((attacker, i) => roleFighter.run(attacker, i));
+        
+        // workers
+        
+        let constructionSites = room.find(FIND_CONSTRUCTION_SITES);
+        let brokenStructures = room.find(FIND_STRUCTURES, {filter: o => o.hits < o.hitsMax}).sort((a, b) => a.hits - b.hits);
+
+        let needMoreEnergy = room.energyCapacityAvailable - room.energyAvailable > 0;
+        workers.sort().map((worker, i) => {
+            
+            if (i === 0 && worker.length > 1) {
+
+                // make sure someone is always upgrading (unless only 1 worker exists)
+                roleUpgrader.run(worker, i);
+
+            } else if (needMoreEnergy) {
+                
+                // we are not at full capacity - let's harvest!
+                roleHarvester.run(worker, i);
+
+            } else if(i > workers.length / 2 && constructionSites.length !== 0) {
+                
+                // Use half the workforce to keep building
+                roleBuilder.run(worker, i);
+                
+            } else if(i <= controller.level && brokenStructures.length > 0) {
+                
+                let brokenStructure = brokenStructures[0];
+                let outcome = worker.repair(brokenStructure);
+                
+                if (outcome === ERR_NOT_IN_RANGE) {
+                    worker.moveTo(brokenStructure);
+                } else if(outcome !== OK) {
+                    console.log("could not upgrade", outcome);
+                }
+
+            } else {
+
+                // Everyone else upgrades
+                roleUpgrader.run(worker, i);
+
+            }
+            
+        });
     };
-    
-
-    // eval if a type of creep is near end of life and create a new one.
-
-    var guards = helpers.creeps.filter(c => c.body.some(b => b.type === ATTACK)).length;
-    var all = helpers.creeps.length;
-    var guardsNeeded = Math.floor(all / 6);
-
-    if(guards < guardsNeeded) {
-        helpers.createCreep([MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]);
-    } else if(helpers.creeps.length < workers) {
-        helpers.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE]);
-    }
-
-    // TODO: Re-evaluate priorities (strategy)
-    // TODO: Let worker say when they are complete full task (mine, then deposit) - before being reassigned
-
-    /*
-    construct extension
-    heal
-    attack
-    spawn
-    upgrade
-    build
-    mine
-
-    consider suicide to create different worker types quickly - ie, create fighters when attacked and you have lots of miners
-
-    out of energy - mine energy
-    upgrade structure
-    build defense
-    attack
-    heal
-
-    */
-
-    // TODO: re-assign each worker based on capabilities, and better candidate than others (location, carry, etc.)
-
-    helpers.creeps.map((creep, i) => {
-
-    // only harvest while energy is not at cap
-    let room = helpers.rooms[0];
-
-    //console.log('test', ATTACK, creep.name, creep.body.map(m => m.type));
-
-    if(creep.body.some(w => w.type === ATTACK)) {
-        roleFighter.run(creep, i);
-
-
-    } else if(room.energyCapacityAvailable - room.energyAvailable > 0) {
-            //creep.say('harvester');
-        roleHarvester.run(creep, i);
-    } else if (i > 4 && creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
-
-            //creep.say('builder');
-        roleBuilder.run(creep, i);
-    } else {
-            //creep.say('upgrader');
-
-        roleUpgrader.run(creep, i);
-    }
-        // creep.memory.role = "harvester";
-
-
-    });
 
 }
