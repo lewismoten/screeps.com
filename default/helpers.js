@@ -44,8 +44,9 @@ function harvest(creep) {
 function gc() {
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
+            
             delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
+            console.log(`Alas, poor ${name}! I knew him...`);
         }
     }
 }
