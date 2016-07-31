@@ -26,6 +26,16 @@ module.exports.loop = function () {
                 t.attack(hostile);
 
             }
+            
+            let cripled = t.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c => c.hits < c.hitsMax});
+
+            if(cripled !== null) {
+
+                t.heal(cripled);
+
+            }
+            
+            // repair
 
         });
 
