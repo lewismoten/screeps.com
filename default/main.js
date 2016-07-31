@@ -3,6 +3,7 @@ let roleHarvester = require('role.harvester');
 let roleUpgrader = require('role.upgrader');
 let roleBuilder = require('role.builder');
 let roleFighter = require('role.fighter');
+let roleFixer = require('role.fixer');
 
 module.exports.loop = function () {
 
@@ -52,7 +53,9 @@ module.exports.loop = function () {
         // workers
         
         let constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-        let brokenStructures = room.find(FIND_STRUCTURES, {filter: o => o.hits < o.hitsMax}).sort((a, b) => a.hits - b.hits);
+        // lets make sure the same broken structure is chosen each tick (so we don't keep moving to random structures)
+        let brokenStructures = room.find(FIND_STRUCTURES, {filter: o => o.hits < o.hitsMax});
+        
 
         let needMoreEnergy = room.energyCapacityAvailable - room.energyAvailable > 0;
         workers.sort().map((worker, i) => {
@@ -67,21 +70,14 @@ module.exports.loop = function () {
                 // we are not at full capacity - let's harvest!
                 roleHarvester.run(worker, i);
 
-            } else if(i > workers.length / 2 && constructionSites.length !== 0) {
+            } else if(i > (workers.length / 2) && constructionSites.length !== 0) {
                 
                 // Use half the workforce to keep building
                 roleBuilder.run(worker, i);
                 
             } else if(i <= controller.level && brokenStructures.length > 0) {
                 
-                let brokenStructure = brokenStructures[0];
-                let outcome = worker.repair(brokenStructure);
-                
-                if (outcome === ERR_NOT_IN_RANGE) {
-                    worker.moveTo(brokenStructure);
-                } else if(outcome !== OK) {
-                    console.log("could not upgrade", outcome);
-                }
+                roleFixer.run(worker, i);
 
             } else {
 
