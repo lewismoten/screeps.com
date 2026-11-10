@@ -1,3 +1,5 @@
+![screeps.com: JavaScript colony game](docs/images/social-preview.png)
+
 # screeps.com
 
 Scripts for playing [Screeps](https://screeps.com), the game where you write JavaScript to control your colony.
